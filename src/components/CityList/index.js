@@ -14,8 +14,8 @@ export default class CityList extends Component {
             <View>
                 <Text>Cities</Text>
                 {
-                    data.map((city) => (
-                        <Text>{city.name}</Text>
+                    data.map((city,key) => (
+                        <Text key={key}>{city.name}</Text>
                     ))
                 }
                 <Picker
@@ -24,8 +24,8 @@ export default class CityList extends Component {
                     
                     onValueChange={(itemValue) =>this.setState({ selectedCity: itemValue })}>
                     {
-                        data.map((city) => (
-                            <Picker.Item label={city.name} value={city.code} />
+                        data.map((city,key) => (
+                            <Picker.Item key={key} label={city.name} value={city.code} />
                         ))
                     }
 
