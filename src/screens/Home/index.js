@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import CityList from '../../components/CityList';
-import { addUser } from './action';
+import { addUser, getRepos } from './action';
 import ContactForm from './form';
 
 class Home extends Component {
@@ -32,6 +32,13 @@ class Home extends Component {
         }
 
     }
+    componentDidMount() {
+        const request={
+            page:1,
+            perPage: 20
+        }
+        this.props.getRepos(request)
+    }
     onChangeUserName = (value) => {
         const { user } = this.state;
         this.setState({ user: { ...user, name: value } });
@@ -45,7 +52,7 @@ class Home extends Component {
         alert(name)
     }
     formSubmit = () => {
-        const { contactForm:{values} } = this.props;
+        const { contactForm: { values } } = this.props;
         console.log(values)
     }
     render() {
@@ -99,11 +106,13 @@ const mapStateToProps = (store) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addUserDispatch: (user) => {
+const mapDispatchToProps = {
+    getRepos,
+    addUserDispatch: (user) => {
+        return (dispatch) => {
             dispatch(addUser(user))
         }
-    };
+    }
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
