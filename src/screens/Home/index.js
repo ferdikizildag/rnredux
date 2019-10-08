@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import CityList from '../../components/CityList';
 import { addUser } from './action';
+import ContactForm from './form';
 
 class Home extends Component {
     constructor(props) {
@@ -40,9 +41,13 @@ class Home extends Component {
         const { addUserDispatch } = this.props
         addUserDispatch(user)
     }
-    editUser=(name)=>{
+    editUser = (name) => {
         alert(name)
-    }   
+    }
+    formSubmit = () => {
+        const { contactForm:{values} } = this.props;
+        console.log(values)
+    }
     render() {
         const { user: { name }, cities, country, districts } = this.state;
         const { users } = this.props;
@@ -54,7 +59,7 @@ class Home extends Component {
                 <CityList data={cities} />
                 <Text style={{ color: 'red' }}>Districts</Text>
                 {
-                    districts.map((district,key) => {
+                    districts.map((district, key) => {
                         let countryDistrict = '90-' + district;
                         return <Text key={key}>{countryDistrict}</Text>
                     })
@@ -72,21 +77,25 @@ class Home extends Component {
                 <View>
                     <Text>Users</Text>
                     {
-                        users.map((user,key)=>(
-                            <TouchableHighlight key={key} onPress={()=>this.editUser(user.name)}>
+                        users.map((user, key) => (
+                            <TouchableHighlight key={key} onPress={() => this.editUser(user.name)}>
                                 <Text>{user.name}</Text>
                             </TouchableHighlight>
                         ))
                     }
                 </View>
+
+                <ContactForm onSubmit={this.formSubmit}></ContactForm>
             </View>
         )
     }
 }
 
 const mapStateToProps = (store) => {
+    console.log(store)
     return {
         users: store.home.users,
+        contactForm: store.form.contact
     };
 };
 
