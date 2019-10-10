@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableHighlight } from 'react-native';
+import { View, Text, TextInput, TouchableHighlight, Button } from 'react-native';
 import { connect } from 'react-redux';
 import CityList from '../../components/CityList';
 import { addUser, getRepos } from './action';
 import ContactForm from './form';
-
+import { FormikForm, CustomTextInput } from '../../components/Form';
+import { Field } from 'formik'
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -33,8 +34,8 @@ class Home extends Component {
 
     }
     componentDidMount() {
-        const request={
-            page:1,
+        const request = {
+            page: 1,
             perPage: 20
         }
         this.props.getRepos(request)
@@ -55,12 +56,15 @@ class Home extends Component {
         const { contactForm: { values } } = this.props;
         console.log(values)
     }
+    formikSubmit=(e)=>{
+
+    }
     render() {
         const { user: { name }, cities, country, districts } = this.state;
         const { users } = this.props;
         return (
             <View style={{ paddingVertical: 50, paddingHorizontal: 50 }}>
-                <Text>{country.name}</Text>
+                {/* <Text>{country.name}</Text>
                 <Text>{country.code}</Text>
                 <Text style={{ color: 'red' }}>Cities</Text>
                 <CityList data={cities} />
@@ -92,14 +96,18 @@ class Home extends Component {
                     }
                 </View>
 
-                <ContactForm onSubmit={this.formSubmit}></ContactForm>
+                <ContactForm onSubmit={this.formSubmit}></ContactForm> */}
+                <FormikForm onSubmit={(values)=>console.log('xxx',values)}>
+                    <Field name="name" placeholder="Name" component={CustomTextInput} />
+                    <Field name="surname" placeholder="Surname" component={CustomTextInput} />
+                    <Field name="email" placeholder="Email" component={CustomTextInput} />
+                </FormikForm>
             </View>
         )
     }
 }
 
 const mapStateToProps = (store) => {
-    console.log(store)
     return {
         users: store.home.users,
         contactForm: store.form.contact
