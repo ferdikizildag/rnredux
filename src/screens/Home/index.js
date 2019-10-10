@@ -6,6 +6,16 @@ import { addUser, getRepos } from './action';
 import ContactForm from './form';
 import { FormikForm, CustomTextInput } from '../../components/Form';
 import { Field } from 'formik'
+const email = (value) => {
+    let errorMessage;
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+        errorMessage = 'Invalid email address';
+    }
+    return errorMessage;
+};
+const required = (value) => {
+    return value ? undefined : 'required'
+};
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -56,7 +66,7 @@ class Home extends Component {
         const { contactForm: { values } } = this.props;
         console.log(values)
     }
-    formikSubmit=(e)=>{
+    formikSubmit = (e) => {
 
     }
     render() {
@@ -97,10 +107,10 @@ class Home extends Component {
                 </View>
 
                 <ContactForm onSubmit={this.formSubmit}></ContactForm> */}
-                <FormikForm onSubmit={(values)=>console.log('xxx',values)}>
-                    <Field name="name" placeholder="Name" component={CustomTextInput} />
+                <FormikForm onSubmit={(values) => console.log('xxx', values)}>
+                    <Field validate={required} name="name" placeholder="Name" component={CustomTextInput} />
                     <Field name="surname" placeholder="Surname" component={CustomTextInput} />
-                    <Field name="email" placeholder="Email" component={CustomTextInput} />
+                    <Field validate={email} name="email" placeholder="Email" component={CustomTextInput} />
                 </FormikForm>
             </View>
         )
