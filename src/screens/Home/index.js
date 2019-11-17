@@ -5,7 +5,9 @@ import CityList from '../../components/CityList';
 import { addUser, getRepos } from './action';
 import ContactForm from './form';
 import { FormikForm, CustomTextInput } from '../../components/Form';
-import { Field } from 'formik'
+import { Field } from 'formik';
+import SplashScreen from 'react-native-splash-screen'
+
 const email = (value) => {
     let errorMessage;
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
@@ -49,6 +51,7 @@ class Home extends Component {
             perPage: 20
         }
         this.props.getRepos(request)
+        SplashScreen.hide()
     }
     onChangeUserName = (value) => {
         const { user } = this.state;
