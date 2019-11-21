@@ -49,7 +49,10 @@ class Home extends Component {
                 name: '',
                 surname: 'Kızıldağ'
             },
-            username: 'CCC'
+            username: 'CCC',
+            selectedDates: {
+
+            }
         }
 
     }
@@ -79,6 +82,25 @@ class Home extends Component {
     }
     formikSubmit = (e) => {
 
+    }
+    onDayPress = (day) => {
+        let newSelectedDates = { ...this.state.selectedDates };
+        if (typeof this.state.selectedDates[day.dateString] != 'object') {
+            newSelectedDates[day.dateString] = {
+                customStyles: {
+                    container: {
+                        backgroundColor: 'green'
+                    },
+                    text: {
+                        color: 'black',
+                        fontWeight: 'bold'
+                    },
+                }
+            }
+        } else {
+            delete newSelectedDates[day.dateString]
+        }
+        this.setState({ selectedDates: newSelectedDates })
     }
     render() {
         const { user: { name }, cities, country, districts } = this.state;
@@ -127,9 +149,14 @@ class Home extends Component {
                     horizontal={false}
                     calendarWidth={320}
                     scrollEnabled={true}
-                    dayComponent={({ date, state }) => {
-                        return (<View><Text style={{ textAlign: 'center', color: state === 'disabled' ? 'red' : 'black' }}>{date.day}</Text></View>);
-                    }}
+                    onDayPress={(day) => this.onDayPress(day)}
+                    markedDates={this.state.selectedDates}
+                    // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
+                    markingType='custom'
+                // dayComponent={({ date, state }) => {
+                //     console.log(date)
+                //     return (<View><Text style={{ textAlign: 'center', color: this.state.selectedDates.includes(date.dateString) ? 'red' : 'black' }}>{date.day}</Text></View>);
+                // }}
 
                 />
             </View>
