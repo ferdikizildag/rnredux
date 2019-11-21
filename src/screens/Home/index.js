@@ -7,7 +7,15 @@ import ContactForm from './form';
 import { FormikForm, CustomTextInput } from '../../components/Form';
 import { Field } from 'formik';
 import SplashScreen from 'react-native-splash-screen'
-
+import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
+LocaleConfig.locales['fr'] = {
+    monthNames: ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'],
+    monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+    dayNames: ['Pazartesi', 'Salı', 'Çarşamba', 'PErşembe', 'Cuma', 'Cumartesi', 'Pazar'],
+    dayNamesShort: ['Pzt', 'Sal.', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+    today: 'Aujourd\'hui'
+};
+LocaleConfig.defaultLocale = 'fr';
 const email = (value) => {
     let errorMessage;
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
@@ -76,7 +84,7 @@ class Home extends Component {
         const { user: { name }, cities, country, districts } = this.state;
         const { users } = this.props;
         return (
-            <View style={{ paddingVertical: 50, paddingHorizontal: 50 }}>
+            <View style={{ paddingVertical: 50, paddingHorizontal: 20 }}>
                 {/* <Text>{country.name}</Text>
                 <Text>{country.code}</Text>
                 <Text style={{ color: 'red' }}>Cities</Text>
@@ -110,11 +118,20 @@ class Home extends Component {
                 </View>
 
                 <ContactForm onSubmit={this.formSubmit}></ContactForm> */}
-                <FormikForm onSubmit={(values) => console.log('xxx', values)}>
+                {/* <FormikForm onSubmit={(values) => console.log('xxx', values)}>
                     <Field validate={required} name="name" placeholder="Name" component={CustomTextInput} />
                     <Field name="surname" placeholder="Surname" component={CustomTextInput} />
                     <Field validate={email} name="email" placeholder="Email" component={CustomTextInput} />
-                </FormikForm>
+                </FormikForm> */}
+                <CalendarList
+                    horizontal={false}
+                    calendarWidth={320}
+                    scrollEnabled={true}
+                    dayComponent={({ date, state }) => {
+                        return (<View><Text style={{ textAlign: 'center', color: state === 'disabled' ? 'red' : 'black' }}>{date.day}</Text></View>);
+                    }}
+
+                />
             </View>
         )
     }
