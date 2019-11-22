@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableHighlight, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native';
 import { connect } from 'react-redux';
 import CityList from '../../components/CityList';
 import { addUser, getRepos } from './action';
@@ -26,6 +26,24 @@ const email = (value) => {
 const required = (value) => {
     return value ? undefined : 'required'
 };
+
+class CustomDayComponent extends Component {
+    render() {
+        const { date, state, marking, onPress } = this.props;
+        return (
+            <TouchableOpacity activeOpacity={1} style={{ backgroundColor: marking.selected ? 'orange' : 'white' }} onPress={() => onPress(date)}>
+                <Text style={{ textAlign: 'center', color: state === 'today' ? 'red' : 'black' }}>{date.day}</Text>
+                {
+                    state === 'today' && <Text>Today</Text>
+                }
+                {
+                    marking && marking.soldOut && <Text>Satıldı</Text>
+                }
+            </TouchableOpacity>
+        )
+    }
+}
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -51,8 +69,12 @@ class Home extends Component {
             },
             username: 'CCC',
             selectedDates: {
-
-            }
+                '2019-11-23': { soldOut: false, blocked: false, selected: true },
+                '2019-11-24': { soldOut: false, blocked: false, selected: true },
+                '2019-11-25': { soldOut: false, blocked: true, selected: true },
+                '2019-11-26': { soldOut: false, blocked: true, selected: true }
+            },
+            pressCount: 0
         }
 
     }
@@ -87,20 +109,12 @@ class Home extends Component {
         let newSelectedDates = { ...this.state.selectedDates };
         if (typeof this.state.selectedDates[day.dateString] != 'object') {
             newSelectedDates[day.dateString] = {
-                customStyles: {
-                    container: {
-                        backgroundColor: 'green'
-                    },
-                    text: {
-                        color: 'black',
-                        fontWeight: 'bold'
-                    },
-                }
+                selected: true
             }
         } else {
             delete newSelectedDates[day.dateString]
         }
-        this.setState({ selectedDates: newSelectedDates })
+        this.setState({ selectedDates: newSelectedDates, pressCount: this.state.pressCount + 1 })
     }
     render() {
         const { user: { name }, cities, country, districts } = this.state;
@@ -150,13 +164,32 @@ class Home extends Component {
                     calendarWidth={320}
                     scrollEnabled={true}
                     onDayPress={(day) => this.onDayPress(day)}
+                    dayComponent={CustomDayComponent}
                     markedDates={this.state.selectedDates}
-                    // Date marking style [simple/period/multi-dot/custom]. Default = 'simple'
-                    markingType='custom'
-                // dayComponent={({ date, state }) => {
-                //     console.log(date)
-                //     return (<View><Text style={{ textAlign: 'center', color: this.state.selectedDates.includes(date.dateString) ? 'red' : 'black' }}>{date.day}</Text></View>);
-                // }}
+                    theme={{
+                        backgroundColor: '#ffffff',
+                        calendarBackground: '#ffffff',
+                        textSectionTitleColor: '#b6c1cd',
+                        selectedDayBackgroundColor: '#00adf5',
+                        selectedDayTextColor: '#ffffff',
+                        todayTextColor: '#00adf5',
+                        dayTextColor: '#2d4150',
+                        textDisabledColor: '#d9e1e8',
+                        dotColor: '#00adf5',
+                        selectedDotColor: '#ffffff',
+                        arrowColor: 'orange',
+                        monthTextColor: 'blue',
+                        indicatorColor: 'blue',
+                        textDayFontFamily: 'monospace',
+                        textMonthFontFamily: 'monospace',
+                        textDayHeaderFontFamily: 'monospace',
+                        textDayFontWeight: '300',
+                        textMonthFontWeight: 'bold',
+                        textDayHeaderFontWeight: '300',
+                        textDayFontSize: 16,
+                        textMonthFontSize: 16,
+                        textDayHeaderFontSize: 16
+                    }}
 
                 />
             </View>
